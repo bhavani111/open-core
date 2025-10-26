@@ -1,0 +1,35 @@
+---
+layout: layouts/base.njk
+title: Home
+description: "Open source insights, tutorials, and development stories"
+---
+
+<section class="hero">
+  <h1>Welcome to {{ site.title }}</h1>
+  <p class="lead">Exploring RISC-V processors, FPGA development, Zephyr RTOS, and open source hardware tools.</p>
+</section>
+
+{% if collections and collections.posts and collections.posts.length %}
+  <section class="recent-posts">
+    <h2>Latest Posts</h2>
+    <ul class="post-list">
+      {% for post in collections.posts | reverse | slice(0,5) %}
+        <li>
+          <article>
+            <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+            {% if post.data.description %}
+              <p>{{ post.data.description }}</p>
+            {% endif %}
+            <time>{{ post.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</time>
+          </article>
+        </li>
+      {% endfor %}
+    </ul>
+    <a href="/posts/" class="btn">View All Posts</a>
+  </section>
+{% else %}
+  <p>No posts yet. Here’s a sample:</p>
+  <ul>
+    <li><a href="/posts/hello/">Hello Post</a></li>
+  </ul>
+{% endif %}

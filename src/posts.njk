@@ -1,0 +1,29 @@
+---
+layout: layouts/base.njk
+title: All Posts
+description: "Browse all blog posts from OpenCore Dispatch"
+---
+
+<h1>All Posts</h1>
+
+{% if collections and collections.posts and collections.posts.length %}
+  <p>Explore all {{ collections.posts.length }} posts from our blog:</p>
+  
+  <ul class="post-list">
+    {% for post in collections.posts | reverse %}
+      <li>
+        <article>
+          <h3><a href="{{ post.url }}">{{ post.data.title }}</a></h3>
+          {% if post.data.description %}
+            <p>{{ post.data.description }}</p>
+          {% endif %}
+          <time>{{ post.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) }}</time>
+        </article>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No posts yet. Check back soon for new content!</p>
+  <p><a href="/" class="btn">Back to Home</a></p>
+{% endif %}
+
