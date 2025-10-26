@@ -9,7 +9,7 @@
     "Open Source Hardware",
     "Embedded Systems"
   ],
-  "url": "https://open-tools.netlify.app",
+  "url": "https://open-core.example.com",
   "author": "Sachin Amingad",
   "social": {
     "github": "https://github.com/sachinamingad",
@@ -24,5 +24,11 @@
     "category": "General",
     "categoryId": "",
     "mapping": "pathname"
+  },
+  "forms": {
+    "newsletter": {
+      "enabled": false,
+      "endpoint": ""
+    }
   }
 }
