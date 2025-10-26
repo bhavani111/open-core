@@ -1,10 +1,12 @@
 {
   "title": "OpenCore Dispatch",
   "description": "RISC-V, FPGA, Zephyr RTOS, and open source hardware development",
-  "url": "https://your-domain.com",
-  "author": "Your Name",
+  "url": "https://open-tools.netlify.app",
+  "author": "Sachin Amingad",
   "social": {
-    "github": "https://github.com/yourusername",
-    "twitter": "https://twitter.com/yourusername"
+    "github": "https://github.com/sachinamingad",
+    "twitter": "https://twitter.com/sachinamingad",
+    "linkedin": "https://linkedin.com/in/sachinamingad",
+    "email": "sachin@open-tools.dev"
   }
 }
