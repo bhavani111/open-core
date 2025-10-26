@@ -13,6 +13,26 @@ module.exports = function(eleventyConfig) {
     return [...new Set(arr)];
   });
 
+  // Normalize keywords from front matter and defaults into a single string
+  eleventyConfig.addFilter("keywordString", function(pageKeywords, defaultKeywords = []) {
+    const toArray = (value) => {
+      if (!value) return [];
+      if (Array.isArray(value)) return value;
+      if (typeof value === "string") {
+        return value
+          .split(",")
+          .map((item) => item.trim())
+          .filter(Boolean);
+      }
+      return [String(value).trim()].filter(Boolean);
+    };
+
+    const combined = [...toArray(pageKeywords), ...toArray(defaultKeywords)];
+    const uniqueKeywords = [...new Set(combined.map((kw) => kw.trim()).filter(Boolean))];
+
+    return uniqueKeywords.join(", ");
+  });
+
   // Add custom filter for URL encoding
   eleventyConfig.addFilter("urlencode", function(str) {
     return encodeURIComponent(str);

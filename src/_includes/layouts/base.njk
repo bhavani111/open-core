@@ -6,6 +6,10 @@
   <title>{% if title %}{{ title }} · {% endif %}{{ site.author }} - {{ site.title }}</title>
   <meta name="description" content="{{ description or site.description | safe }}">
   <meta name="author" content="{{ site.author }}">
+  {% set keywordContent = keywords | keywordString(site.metaKeywords) %}
+  {% if keywordContent %}
+  <meta name="keywords" content="{{ keywordContent }}">
+  {% endif %}
 
   <!-- Canonical URL -->
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
