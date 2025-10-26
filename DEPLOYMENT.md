@@ -11,15 +11,14 @@ This guide will help you deploy your blog to the internet for free!
 
 ## 🚀 Deployment Options
 
-### Option 1: Netlify (Recommended - Easiest)
+### Option 1: GitHub Pages (Recommended - Zero cost, no extra accounts)
 
-**Why Netlify?**
-- ✅ Completely free for static sites
-- ✅ Automatic builds from GitHub
+**Why GitHub Pages?**
+- ✅ Completely free
+- ✅ Uses your existing GitHub account
+- ✅ Automatic builds via GitHub Actions
 - ✅ Free SSL certificate (HTTPS)
 - ✅ Custom domain support
-- ✅ Continuous deployment (auto-updates when you push to GitHub)
-- ✅ No configuration needed (uses `netlify.toml`)
 
 **Steps:**
 
@@ -34,92 +33,99 @@ This guide will help you deploy your blog to the internet for free!
    - Click "Create repository"
 
 3. **Push your code to GitHub**
-   
+
    Open PowerShell in your project folder and run:
-   
+
    ```powershell
    # Add GitHub as remote (replace YOUR_USERNAME with your GitHub username)
    git remote add origin https://github.com/YOUR_USERNAME/opencore-dispatch.git
-   
+
    # Rename branch to main (if needed)
    git branch -M main
-   
+
    # Push to GitHub
    git push -u origin main
    ```
 
-4. **Deploy to Netlify**
-   - Go to https://www.netlify.com/
-   - Click "Sign up" and choose "Sign up with GitHub"
-   - Authorize Netlify to access your GitHub
-   - Click "Add new site" → "Import an existing project"
-   - Choose "GitHub"
-   - Select your `opencore-dispatch` repository
-   - Netlify will auto-detect settings from `netlify.toml`
-   - Click "Deploy site"
+4. **Enable GitHub Pages**
+   - Go to your repository on GitHub
+   - Click "Settings" → "Pages"
+   - Under "Build and deployment", choose "GitHub Actions"
+   - The workflow file at `.github/workflows/deploy.yml` is ready to go
 
-5. **Your site is live!**
-   - Netlify will give you a URL like: `https://random-name-123456.netlify.app`
-   - You can change this to a custom subdomain in Site settings → Domain management
-   - Example: `https://opencore-dispatch.netlify.app`
+5. **Set the public URL in the site data**
+   - Edit `src/_data/site.json`
+   - Change `url` to `https://YOUR_USERNAME.github.io/opencore-dispatch`
+
+6. **Trigger the first deployment**
+   - Push a commit or head to the **Actions** tab and run "Deploy site"
+   - Approve the workflow if GitHub prompts you
+
+7. **Your site is live!**
+   - URL: `https://YOUR_USERNAME.github.io/opencore-dispatch/`
+   - Set a custom domain in **Settings → Pages** if desired
+
+> The GitHub Actions workflow calculates the correct Eleventy `pathPrefix`
+> automatically, so assets work on both user/organization pages and repository
+> pages.
 
 **Future updates:**
-- Just push to GitHub: `git push`
-- Netlify automatically rebuilds and deploys!
+- Push to GitHub: `git push`
+- The workflow rebuilds and deploys automatically
 
 ---
 
-### Option 2: GitHub Pages (Free, GitHub-integrated)
-
-**Why GitHub Pages?**
-- ✅ Completely free
-- ✅ Integrated with GitHub
-- ✅ Custom domain support
-- ✅ Good for open source projects
-
-**Steps:**
-
-1. **Push to GitHub** (same as steps 1-3 from Netlify above)
-
-2. **Enable GitHub Pages**
-   - Go to your repository on GitHub
-   - Click "Settings" → "Pages" (in the left sidebar)
-   - Under "Source", select "GitHub Actions"
-   - The workflow file is already created at `.github/workflows/deploy.yml`
-
-3. **Trigger deployment**
-   - The workflow will run automatically on your next push
-   - Or go to "Actions" tab and manually run the workflow
-
-4. **Your site is live!**
-   - URL will be: `https://YOUR_USERNAME.github.io/opencore-dispatch/`
-   - You can set up a custom domain in Settings → Pages
-
----
-
-### Option 3: Vercel (Fast, modern)
+### Option 2: Vercel (Fast, modern)
 
 **Why Vercel?**
-- ✅ Free tier
-- ✅ Very fast deployment
-- ✅ Great performance
-- ✅ Easy custom domains
+- ✅ Generous free tier
+- ✅ Global CDN and great performance
+- ✅ Automatic previews for pull requests
+- ✅ Easy custom domains and HTTPS
 
 **Steps:**
 
-1. **Push to GitHub** (same as steps 1-3 from Netlify above)
+1. **Push to GitHub** (same as steps 1-3 above)
 
 2. **Deploy to Vercel**
    - Go to https://vercel.com/
    - Click "Sign up" and choose "Continue with GitHub"
    - Click "Add New" → "Project"
    - Import your `opencore-dispatch` repository
-   - Vercel will auto-detect Eleventy
+   - Vercel auto-detects Eleventy
+   - Build command: `npm run build`
+   - Output directory: `_site`
    - Click "Deploy"
 
 3. **Your site is live!**
-   - URL will be: `https://opencore-dispatch.vercel.app`
-   - You can customize the domain in project settings
+   - Default URL: `https://opencore-dispatch.vercel.app`
+   - Add a custom domain in **Settings → Domains** if you have one
+
+---
+
+### Option 3: Cloudflare Pages (Great for custom domains)
+
+**Why Cloudflare Pages?**
+- ✅ Free tier with generous bandwidth
+- ✅ Built-in CDN and web analytics
+- ✅ Easy custom domains and SSL management
+- ✅ Integrates with Cloudflare DNS if you already use it
+
+**Steps:**
+
+1. **Push to GitHub** (same as steps 1-3 above)
+
+2. **Deploy to Cloudflare Pages**
+   - Go to https://pages.cloudflare.com/
+   - Click "Create a project" and connect your GitHub account
+   - Select the `opencore-dispatch` repository
+   - Build command: `npm run build`
+   - Build output directory: `_site`
+   - Save and start the first deploy
+
+3. **Your site is live!**
+   - Default URL: `https://opencore-dispatch.pages.dev`
+   - Assign a custom domain in **Pages → Custom domains**
 
 ---
 
@@ -133,9 +139,9 @@ If you want your own domain like `opencoredispatch.com`:
    - Cloudflare (~$9/year)
 
 2. **Configure DNS** in your hosting platform:
-   - **Netlify**: Settings → Domain management → Add custom domain
    - **GitHub Pages**: Settings → Pages → Custom domain
    - **Vercel**: Project Settings → Domains → Add
+   - **Cloudflare Pages**: Project → Custom domains → Set up
 
 3. **Update DNS records** at your domain registrar:
    - Follow the instructions from your hosting platform
@@ -166,14 +172,14 @@ After deployment, to update your blog:
 
 ---
 
-## 🎯 Recommended: Start with Netlify
+## 🎯 Recommended: Start with GitHub Pages
 
-For beginners, I recommend **Netlify** because:
-- Easiest setup
-- Best free tier
+For beginners, I recommend **GitHub Pages** because:
+- No additional accounts to manage
+- Excellent free tier
 - Automatic HTTPS
-- Great dashboard
-- Easy custom domains
+- Tight GitHub integration
+- Simple custom domain setup
 
 ---
 

@@ -1,4 +1,6 @@
 module.exports = function(eleventyConfig) {
+  const pathPrefix = process.env.ELEVENTY_PATH_PREFIX || "/";
+
   // Copy through static files
   eleventyConfig.addPassthroughCopy("public");
   eleventyConfig.addPassthroughCopy({"src/assets": "assets"});
@@ -65,6 +67,7 @@ module.exports = function(eleventyConfig) {
   });
 
   return {
+    pathPrefix,
     dir: {
       input: "src",
       includes: "_includes",

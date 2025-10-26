@@ -15,11 +15,11 @@
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
   
   <!-- Icons -->
-  <link rel="icon" href="/favicon.ico">
-  <link rel="apple-touch-icon" href="/favicon.ico">
+  <link rel="icon" href="{{ '/favicon.ico' | url }}">
+  <link rel="apple-touch-icon" href="{{ '/favicon.ico' | url }}">
   
   <!-- Styles -->
-  <link rel="stylesheet" href="/assets/styles.css">
+  <link rel="stylesheet" href="{{ '/assets/styles.css' | url }}">
 
   {% set defaultSocialImage = site.socialImage | default('') %}
   {% set socialImage = (image or defaultSocialImage) | trim %}
@@ -66,7 +66,7 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   
   <!-- RSS Feed -->
-  <link rel="alternate" type="application/rss+xml" title="{{ site.title }} RSS Feed" href="{{ site.url }}/feed.xml">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }} RSS Feed" href="{{ site.url }}{{ '/feed.xml' | url }}">
   
   <!-- JSON-LD Structured Data -->
   <script type="application/ld+json">
@@ -143,7 +143,7 @@
   <header class="site-header">
     <div class="header-top">
       <div class="header-brand">
-        <h1><a href="/">{{ site.author }}</a></h1>
+        <h1><a href="{{ '/' | url }}">{{ site.author }}</a></h1>
         <span class="header-tagline">{{ site.title }}</span>
       </div>
       <div class="social-links">
@@ -170,10 +170,10 @@
       </div>
     </div>
     <nav class="main-nav">
-      <a href="/">Home</a>
-      <a href="/about/">About</a>
-      <a href="/posts/">Posts</a>
-      <a href="/contact/">Contact</a>
+      <a href="{{ '/' | url }}">Home</a>
+      <a href="{{ '/about/' | url }}">About</a>
+      <a href="{{ '/posts/' | url }}">Posts</a>
+      <a href="{{ '/contact/' | url }}">Contact</a>
     </nav>
   </header>
 
@@ -184,31 +184,38 @@
   </main>
 
   <!-- Newsletter Signup -->
-  <div class="newsletter-signup">
-    <div class="container">
-      <div class="newsletter-content">
-        <h2>📬 Stay Updated</h2>
-        <p>Get the latest posts on RISC-V, FPGA development, and open source hardware delivered to your inbox.</p>
-        <form class="newsletter-form" id="newsletter-form" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
-          <input type="hidden" name="form-name" value="newsletter" />
-          <p class="visually-hidden" aria-hidden="true">
-            <label>Don’t fill this out if you're human: <input name="bot-field" tabindex="-1"></label>
-          </p>
-          <input
-            type="email"
-            name="email"
-            id="newsletter-email"
-            placeholder="Enter your email"
-            required
-            aria-label="Email address"
-          />
-          <button type="submit" class="btn">Subscribe</button>
-        </form>
-        <p class="form-message" id="newsletter-message" role="status" aria-live="polite"></p>
-        <p class="newsletter-privacy">No spam. Unsubscribe anytime.</p>
+  {% if site.forms and site.forms.newsletter and site.forms.newsletter.enabled and site.forms.newsletter.endpoint %}
+    <div class="newsletter-signup">
+      <div class="container">
+        <div class="newsletter-content">
+          <h2>📬 Stay Updated</h2>
+          <p>Get the latest posts on RISC-V, FPGA development, and open source hardware delivered to your inbox.</p>
+          <form
+            class="newsletter-form"
+            id="newsletter-form"
+            name="newsletter"
+            method="POST"
+            action="{{ site.forms.newsletter.endpoint }}"
+            data-endpoint="{{ site.forms.newsletter.endpoint }}">
+            <p class="visually-hidden" aria-hidden="true">
+              <label>Don’t fill this out if you're human: <input name="bot-field" tabindex="-1"></label>
+            </p>
+            <input
+              type="email"
+              name="email"
+              id="newsletter-email"
+              placeholder="Enter your email"
+              required
+              aria-label="Email address"
+            />
+            <button type="submit" class="btn">Subscribe</button>
+          </form>
+          <p class="form-message" id="newsletter-message" role="status" aria-live="polite"></p>
+          <p class="newsletter-privacy">No spam. Unsubscribe anytime.</p>
+        </div>
       </div>
     </div>
-  </div>
+  {% endif %}
 
   <footer>
     <div class="container">
@@ -274,47 +281,60 @@
       }
     });
 
-    // Newsletter form handling for Netlify Forms
+    // Newsletter form handling for external providers
     const newsletterForm = document.getElementById('newsletter-form');
     const newsletterMessage = document.getElementById('newsletter-message');
 
     if (newsletterForm && newsletterMessage) {
-      const encode = (data) => {
-        return Object.keys(data)
-          .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
-          .join('&');
-      };
-
       newsletterForm.addEventListener('submit', async (event) => {
         event.preventDefault();
 
         const emailField = newsletterForm.elements['email'];
-        const formData = {
-          'form-name': 'newsletter',
-          email: emailField.value.trim()
-        };
+        const endpoint = newsletterForm.dataset.endpoint || newsletterForm.getAttribute('action');
+
+        if (!endpoint || endpoint === '#') {
+          newsletterMessage.textContent = 'Newsletter signup is not available right now. Please try again later.';
+          newsletterMessage.className = 'form-message error';
+          return;
+        }
+
+        const formData = new FormData(newsletterForm);
 
         newsletterMessage.textContent = 'Submitting…';
         newsletterMessage.className = 'form-message pending';
 
         try {
-          const response = await fetch('/', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: encode(formData)
+          const response = await fetch(endpoint, {
+            method: (newsletterForm.getAttribute('method') || 'POST').toUpperCase(),
+            headers: { Accept: 'application/json' },
+            body: formData
           });
 
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
+          if (response.ok) {
+            newsletterMessage.textContent = 'Thanks for subscribing! Please check your inbox for a confirmation email.';
+            newsletterMessage.className = 'form-message success';
+            newsletterForm.reset();
+            emailField.focus();
+            return;
           }
 
-          newsletterMessage.textContent = 'Thanks for subscribing! Please check your inbox for a confirmation email.';
-          newsletterMessage.className = 'form-message success';
-          newsletterForm.reset();
-          emailField.focus();
+          let errorText = 'Something went wrong. Please try again or contact us directly.';
+
+          try {
+            const data = await response.json();
+            if (data && data.errors && data.errors.length > 0) {
+              errorText = data.errors.map((item) => item.message).join(' ');
+            } else if (data && data.error) {
+              errorText = data.error;
+            }
+          } catch (parseError) {
+            console.warn('Unable to parse newsletter error response', parseError);
+          }
+
+          throw new Error(errorText);
         } catch (error) {
           console.error(error);
-          newsletterMessage.textContent = 'Something went wrong. Please try again or contact us directly.';
+          newsletterMessage.textContent = error?.message || 'Something went wrong. Please try again or contact us directly.';
           newsletterMessage.className = 'form-message error';
         }
       });

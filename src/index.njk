@@ -25,11 +25,11 @@ description: "Open source insights, tutorials, and development stories"
         </li>
       {% endfor %}
     </ul>
-    <a href="/posts/" class="btn">View All Posts</a>
+    <a href="{{ '/posts/' | url }}" class="btn">View All Posts</a>
   </section>
 {% else %}
   <p>No posts yet. Here’s a sample:</p>
   <ul>
-    <li><a href="/posts/hello/">Hello Post</a></li>
+    <li><a href="{{ '/posts/hello/' | url }}">Hello Post</a></li>
   </ul>
 {% endif %}

@@ -16,7 +16,7 @@ layout: layouts/base.njk
     {% if tags %}
       <div class="tags">
         {% for tag in tags %}
-          <a href="/posts/#{{ tag }}" class="tag">#{{ tag }}</a>
+          <a href="{{ '/posts/' | url }}#{{ tag }}" class="tag">#{{ tag }}</a>
         {% endfor %}
       </div>
     {% endif %}
@@ -120,7 +120,7 @@ layout: layouts/base.njk
   </div>
 
   <div class="post-navigation">
-    <a href="/posts/" class="btn">← Back to All Posts</a>
+    <a href="{{ '/posts/' | url }}" class="btn">← Back to All Posts</a>
   </div>
 </article>
 
