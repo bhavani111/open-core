@@ -15,7 +15,7 @@ OpenCore Dispatch is dedicated to sharing knowledge about:
 - **Static Site Generator**: [Eleventy](https://www.11ty.dev/)
 - **Template Engine**: Nunjucks
 - **Styling**: Custom CSS
-- **Hosting**: Netlify / GitHub Pages / Vercel
+- **Hosting**: GitHub Pages / Vercel / Cloudflare Pages
 
 ## Local Development
 
@@ -63,7 +63,8 @@ The built site will be in the `_site` directory.
 │   └── posts.njk       # Posts archive
 ├── .eleventy.js        # Eleventy configuration
 ├── package.json        # Dependencies and scripts
-└── netlify.toml        # Netlify deployment config
+└── .github/
+    └── workflows/      # GitHub Actions workflows
 ```
 
 ## Writing Posts
@@ -86,29 +87,39 @@ Your content here...
 
 ## Deployment
 
-### Netlify (Recommended)
+### GitHub Pages (Recommended)
 
-1. Push your code to GitHub
-2. Sign up at [Netlify](https://www.netlify.com/)
-3. Click "New site from Git"
-4. Select your repository
-5. Netlify will auto-detect settings from `netlify.toml`
-6. Click "Deploy site"
+This repository ships with a GitHub Actions workflow that builds Eleventy and
+publishes the static site to GitHub Pages.
 
-### GitHub Pages
-
-1. Push your code to GitHub
-2. Go to repository Settings → Pages
-3. Set source to GitHub Actions
-4. Create `.github/workflows/deploy.yml`
+1. Push your code to GitHub.
+2. In your repository settings enable **Pages** and choose "GitHub Actions" as the
+   source.
+3. In **Settings → Pages → Build and deployment** select the `github-pages`
+   environment if it is not already chosen.
+4. On every push to `main`, the `Deploy site` workflow builds the site and
+   publishes it to Pages. You can also trigger the workflow manually from the
+   **Actions** tab.
 
 ### Vercel
 
-1. Push your code to GitHub
-2. Sign up at [Vercel](https://vercel.com/)
-3. Import your repository
-4. Vercel will auto-detect Eleventy
-5. Click "Deploy"
+1. Push your code to GitHub.
+2. Sign up at [Vercel](https://vercel.com/) (or log in).
+3. Import your repository.
+4. Vercel auto-detects Eleventy; keep the default `npm run build` command and
+   deploy.
+
+### Cloudflare Pages
+
+1. Push your code to GitHub.
+2. In Cloudflare Pages, create a new project and connect your repository.
+3. Set the build command to `npm run build` and the output directory to `_site`.
+4. Save and deploy.
+
+> **Newsletter form note:** This starter is configured for third-party form
+> providers. Update `forms.newsletter.endpoint` in `src/_data/site.json` to point
+> to your service (for example a [Formspree](https://formspree.io/) endpoint) if
+> you want to collect email addresses.
 
 ## Contributing
 
