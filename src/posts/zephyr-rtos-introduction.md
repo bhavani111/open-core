@@ -1,8 +1,8 @@
 ---
-layout: layouts/base.njk
+layout: layouts/post.njk
 title: "Introduction to Zephyr RTOS for Embedded Systems"
 description: "Getting started with Zephyr RTOS - a scalable, open source real-time operating system for embedded devices"
-date: 2025-10-24
+date: 2024-05-01
 tags: ["zephyr", "rtos", "embedded", "tutorial"]
 ---
 

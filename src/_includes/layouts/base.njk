@@ -1,19 +1,16 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>{% if title %}{{ title }} · {% endif %}{{ site.author }} - {{ site.title }}</title>
   <meta name="description" content="{{ description or site.description | safe }}">
   <meta name="author" content="{{ site.author }}">
-  
-  <!-- SEO Keywords - Help search engines find content by author name -->
-  {% if keywords %}
-  <meta name="keywords" content="{{ keywords }}, Sachin Amingad, RISC-V Developer">
-  {% else %}
-  <meta name="keywords" content="Sachin Amingad, RISC-V, FPGA, Zephyr RTOS, Open Source Hardware, Embedded Systems, Sachin Amingad Blog">
+  {% set keywordContent = keywords | keywordString(site.metaKeywords) %}
+  {% if keywordContent %}
+  <meta name="keywords" content="{{ keywordContent }}">
   {% endif %}
-  
+
   <!-- Canonical URL -->
   <link rel="canonical" href="{{ site.url }}{{ page.url }}">
   
@@ -24,6 +21,16 @@
   <!-- Styles -->
   <link rel="stylesheet" href="/assets/styles.css">
 
+  {% set defaultSocialImage = site.socialImage | default('') %}
+  {% set socialImage = (image or defaultSocialImage) | trim %}
+  {% if socialImage %}
+    {% if socialImage | first == '/' %}
+      {% set socialImageUrl = site.url ~ socialImage %}
+    {% else %}
+      {% set socialImageUrl = socialImage %}
+    {% endif %}
+  {% endif %}
+
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="{% if layout == 'post' %}article{% else %}website{% endif %}">
   <meta property="og:title" content="{% if title %}{{ title }} · {% endif %}{{ site.title }}">
@@ -31,6 +38,9 @@
   <meta property="og:url" content="{{ site.url }}{{ page.url }}">
   <meta property="og:site_name" content="{{ site.title }}">
   <meta property="og:locale" content="en_US">
+  {% if socialImageUrl %}
+  <meta property="og:image" content="{{ socialImageUrl }}">
+  {% endif %}
   {% if date %}
   <meta property="article:published_time" content="{{ date.toISOString() }}">
   {% endif %}
@@ -46,6 +56,9 @@
   <meta name="twitter:creator" content="@sachinamingad">
   <meta name="twitter:title" content="{% if title %}{{ title }} · {% endif %}{{ site.title }}">
   <meta name="twitter:description" content="{{ description or site.description | safe }}">
+  {% if socialImageUrl %}
+  <meta name="twitter:image" content="{{ socialImageUrl }}">
+  {% endif %}
   
   <!-- Mobile Web App -->
   <meta name="theme-color" content="#2563eb">
@@ -176,17 +189,22 @@
       <div class="newsletter-content">
         <h2>📬 Stay Updated</h2>
         <p>Get the latest posts on RISC-V, FPGA development, and open source hardware delivered to your inbox.</p>
-        <form class="newsletter-form" id="newsletter-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
-          <input 
-            type="email" 
-            name="email" 
-            id="newsletter-email" 
-            placeholder="Enter your email" 
+        <form class="newsletter-form" id="newsletter-form" name="newsletter" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+          <input type="hidden" name="form-name" value="newsletter" />
+          <p class="visually-hidden" aria-hidden="true">
+            <label>Don’t fill this out if you're human: <input name="bot-field" tabindex="-1"></label>
+          </p>
+          <input
+            type="email"
+            name="email"
+            id="newsletter-email"
+            placeholder="Enter your email"
             required
             aria-label="Email address"
           />
           <button type="submit" class="btn">Subscribe</button>
         </form>
+        <p class="form-message" id="newsletter-message" role="status" aria-live="polite"></p>
         <p class="newsletter-privacy">No spam. Unsubscribe anytime.</p>
       </div>
     </div>
@@ -227,8 +245,12 @@
     const html = document.documentElement;
 
     // Check for saved theme preference or default to light mode
-    const currentTheme = localStorage.getItem('theme') || 'light';
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const currentTheme = savedTheme || (prefersDark ? 'dark' : 'light');
     html.setAttribute('data-theme', currentTheme);
+
+    themeToggle.setAttribute('aria-pressed', currentTheme === 'dark');
 
     if (currentTheme === 'dark') {
       themeIconLight.style.display = 'none';
@@ -241,6 +263,7 @@
 
       html.setAttribute('data-theme', newTheme);
       localStorage.setItem('theme', newTheme);
+      themeToggle.setAttribute('aria-pressed', newTheme === 'dark');
 
       if (newTheme === 'dark') {
         themeIconLight.style.display = 'none';
@@ -250,6 +273,52 @@
         themeIconDark.style.display = 'none';
       }
     });
+
+    // Newsletter form handling for Netlify Forms
+    const newsletterForm = document.getElementById('newsletter-form');
+    const newsletterMessage = document.getElementById('newsletter-message');
+
+    if (newsletterForm && newsletterMessage) {
+      const encode = (data) => {
+        return Object.keys(data)
+          .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(data[key])}`)
+          .join('&');
+      };
+
+      newsletterForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+
+        const emailField = newsletterForm.elements['email'];
+        const formData = {
+          'form-name': 'newsletter',
+          email: emailField.value.trim()
+        };
+
+        newsletterMessage.textContent = 'Submitting…';
+        newsletterMessage.className = 'form-message pending';
+
+        try {
+          const response = await fetch('/', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+            body: encode(formData)
+          });
+
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          newsletterMessage.textContent = 'Thanks for subscribing! Please check your inbox for a confirmation email.';
+          newsletterMessage.className = 'form-message success';
+          newsletterForm.reset();
+          emailField.focus();
+        } catch (error) {
+          console.error(error);
+          newsletterMessage.textContent = 'Something went wrong. Please try again or contact us directly.';
+          newsletterMessage.className = 'form-message error';
+        }
+      });
+    }
 
     // Back to top button
     const backToTop = document.getElementById('back-to-top');
