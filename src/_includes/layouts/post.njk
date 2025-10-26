@@ -72,6 +72,49 @@ layout: layouts/base.njk
     </div>
   </div>
 
+  <!-- Related Posts -->
+  {% if collections and collections.posts and collections.posts.length > 1 %}
+  <div class="related-posts">
+    <h3>Related Posts</h3>
+    <div class="related-posts-grid">
+      {% set currentPost = page.url %}
+      {% set relatedPosts = collections.posts | reverse | slice(0, 3) %}
+      {% for post in relatedPosts %}
+        {% if post.url != currentPost %}
+        <div class="related-post-card">
+          <h4><a href="{{ post.url }}">{{ post.data.title }}</a></h4>
+          {% if post.data.description %}
+            <p>{{ post.data.description }}</p>
+          {% endif %}
+          <time>{{ post.date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' }) }}</time>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Giscus Comments -->
+  <div class="comments-section" id="comments">
+    <h3>Join the Discussion</h3>
+    <p>Share your thoughts, ask questions, or provide feedback on this post!</p>
+    <script src="https://giscus.app/client.js"
+            data-repo="bhavani111/open-core"
+            data-repo-id="your-repo-id"
+            data-category="Announcements"
+            data-category-id="your-category-id"
+            data-mapping="pathname"
+            data-strict="0"
+            data-reactions-enabled="1"
+            data-emit-metadata="0"
+            data-input-position="bottom"
+            data-theme="preferred_color_scheme"
+            data-lang="en"
+            crossorigin="anonymous"
+            async>
+    </script>
+  </div>
+
   <div class="post-navigation">
     <a href="/posts/" class="btn">← Back to All Posts</a>
   </div>
@@ -178,6 +221,96 @@ layout: layouts/base.njk
   border-top: 2px solid var(--border-color);
 }
 
+/* Related Posts */
+.related-posts {
+  margin: 3rem 0;
+  padding-top: 2rem;
+  border-top: 2px solid var(--border-color);
+}
+
+.related-posts h3 {
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+.related-posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.related-post-card {
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(5px);
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.related-post-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+.related-post-card h4 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+.related-post-card h4 a {
+  color: var(--primary-color);
+  text-decoration: none;
+}
+
+.related-post-card h4 a:hover {
+  text-decoration: underline;
+}
+
+.related-post-card p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin: 0.5rem 0;
+}
+
+.related-post-card time {
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+[data-theme="dark"] .related-post-card {
+  background: rgba(17, 24, 39, 0.5);
+}
+
+[data-theme="dark"] .related-post-card:hover {
+  background: rgba(17, 24, 39, 0.8);
+}
+
+/* Comments Section */
+.comments-section {
+  margin: 3rem 0;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(5px);
+  border-radius: 0.75rem;
+  border: 1px solid var(--border-color);
+}
+
+.comments-section h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--text-color);
+}
+
+.comments-section p {
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+}
+
+[data-theme="dark"] .comments-section {
+  background: rgba(17, 24, 39, 0.3);
+}
+
 @media (max-width: 768px) {
   .post-header h1 {
     font-size: 1.75rem;
@@ -191,6 +324,10 @@ layout: layouts/base.njk
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
+  }
+
+  .related-posts-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>

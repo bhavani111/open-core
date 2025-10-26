@@ -129,6 +129,28 @@
     </div>
   </main>
 
+  <!-- Newsletter Signup -->
+  <div class="newsletter-signup">
+    <div class="container">
+      <div class="newsletter-content">
+        <h2>📬 Stay Updated</h2>
+        <p>Get the latest posts on RISC-V, FPGA development, and open source hardware delivered to your inbox.</p>
+        <form class="newsletter-form" id="newsletter-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+          <input 
+            type="email" 
+            name="email" 
+            id="newsletter-email" 
+            placeholder="Enter your email" 
+            required
+            aria-label="Email address"
+          />
+          <button type="submit" class="btn">Subscribe</button>
+        </form>
+        <p class="newsletter-privacy">No spam. Unsubscribe anytime.</p>
+      </div>
+    </div>
+  </div>
+
   <footer>
     <div class="container">
       <p>© <span id="year"></span> {{ site.title }} · By {{ site.author }}</p>
