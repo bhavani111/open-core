@@ -98,12 +98,13 @@ layout: layouts/base.njk
   <div class="comments-section" id="comments">
     <h3>Join the Discussion</h3>
     <p>Share your thoughts, ask questions, or provide feedback on this post!</p>
+    {% if site.giscus and site.giscus.enabled and site.giscus.repo and site.giscus.repoId and site.giscus.categoryId %}
     <script src="https://giscus.app/client.js"
-            data-repo="bhavani111/open-core"
-            data-repo-id="your-repo-id"
-            data-category="Announcements"
-            data-category-id="your-category-id"
-            data-mapping="pathname"
+            data-repo="{{ site.giscus.repo }}"
+            data-repo-id="{{ site.giscus.repoId }}"
+            data-category="{{ site.giscus.category }}"
+            data-category-id="{{ site.giscus.categoryId }}"
+            data-mapping="{{ site.giscus.mapping or 'pathname' }}"
             data-strict="0"
             data-reactions-enabled="1"
             data-emit-metadata="0"
@@ -113,6 +114,9 @@ layout: layouts/base.njk
             crossorigin="anonymous"
             async>
     </script>
+    {% else %}
+    <p class="comments-placeholder">Comments will appear here once GitHub Discussions are enabled.</p>
+    {% endif %}
   </div>
 
   <div class="post-navigation">
@@ -291,8 +295,7 @@ layout: layouts/base.njk
 .comments-section {
   margin: 3rem 0;
   padding: 2rem;
-  background: rgba(255, 255, 255, 0.3);
-  backdrop-filter: blur(5px);
+  background: var(--bg-secondary);
   border-radius: 0.75rem;
   border: 1px solid var(--border-color);
 }
@@ -307,8 +310,13 @@ layout: layouts/base.njk
   margin-bottom: 1.5rem;
 }
 
-[data-theme="dark"] .comments-section {
-  background: rgba(17, 24, 39, 0.3);
+html[data-theme="dark"] .comments-section {
+  background: var(--bg-secondary);
+}
+
+.comments-placeholder {
+  margin: 1rem 0 0;
+  font-size: 0.95rem;
 }
 
 @media (max-width: 768px) {

@@ -2,7 +2,7 @@
 layout: layouts/post.njk
 title: "FPGA Development with Open Source Tools"
 description: "Learn how to design and synthesize FPGA projects using Yosys, nextpnr, and other open source tools"
-date: 2025-10-22
+date: 2024-03-12
 tags: ["fpga", "yosys", "nextpnr", "tutorial"]
 ---
 

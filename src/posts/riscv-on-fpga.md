@@ -2,7 +2,7 @@
 layout: layouts/post.njk
 title: "Running RISC-V on FPGA: A Complete Guide"
 description: "Learn how to implement and run a RISC-V processor on an FPGA using open source tools"
-date: 2025-10-26
+date: 2024-06-10
 tags: ["risc-v", "fpga", "vexriscv", "litex"]
 ---
 

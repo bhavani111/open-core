@@ -2,7 +2,7 @@
 layout: layouts/post.njk
 title: "Getting Started with RISC-V Development"
 description: "A beginner's guide to setting up a RISC-V development environment and running your first program"
-date: 2025-10-20
+date: 2024-02-18
 tags: ["risc-v", "tutorial", "toolchain"]
 ---
 

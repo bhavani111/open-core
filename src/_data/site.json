@@ -8,5 +8,13 @@
     "twitter": "https://twitter.com/sachinamingad",
     "linkedin": "https://www.linkedin.com/in/sachin-amingad",
     "email": "sachin@open-tools.dev"
+  },
+  "giscus": {
+    "enabled": false,
+    "repo": "bhavani111/open-core",
+    "repoId": "R_kgDOQJey2Q",
+    "category": "General",
+    "categoryId": "",
+    "mapping": "pathname"
   }
 }
