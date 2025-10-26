@@ -8,6 +8,16 @@ module.exports = function(eleventyConfig) {
     return collectionApi.getFilteredByGlob("src/posts/*.md");
   });
 
+  // Add custom filter for unique values
+  eleventyConfig.addFilter("unique", function(arr) {
+    return [...new Set(arr)];
+  });
+
+  // Add custom filter for URL encoding
+  eleventyConfig.addFilter("urlencode", function(str) {
+    return encodeURIComponent(str);
+  });
+
   return {
     dir: {
       input: "src",
