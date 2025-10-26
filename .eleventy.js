@@ -2,6 +2,9 @@ module.exports = function(eleventyConfig) {
   // Copy through static files
   eleventyConfig.addPassthroughCopy("public");
   eleventyConfig.addPassthroughCopy({"src/assets": "assets"});
+  
+  // Copy Google verification file to root
+  eleventyConfig.addPassthroughCopy({"public/google8ef9b69306a703d4.html": "google8ef9b69306a703d4.html"});
 
   // Create a collection for posts
   eleventyConfig.addCollection("posts", function(collectionApi) {
