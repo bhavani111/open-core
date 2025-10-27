@@ -60,14 +60,27 @@ Future pushes to `main` redeploy automatically, and every pull request receives 
 
 ### Option 3: GitHub Pages (Simple static hosting)
 
-If you prefer to stay entirely within GitHub:
+Prefer to keep everything on GitHub? This repository ships with
+`.github/workflows/deploy.yml`, so the heavy lifting is already done.
 
 1. Push your code to GitHub.
-2. Add a GitHub Actions workflow that builds Eleventy and uploads the `_site` folder to Pages. The [`actions/deploy-pages`](https://github.com/actions/deploy-pages) workflow template is a good starting point.
-3. Set `src/_data/site.json` → `url` to `https://YOUR_USERNAME.github.io/YOUR_REPO`.
-4. Enable **Settings → Pages** in your repository and point it at the workflow output.
+2. On the first push to `main`, the workflow builds the site and uploads the
+   artifact. Visit **Settings → Pages** and confirm that the source is set to
+   **GitHub Actions**.
+3. Update `src/_data/site.json` → `url` with your Pages domain. For project
+   sites this is usually `https://YOUR_USERNAME.github.io/YOUR_REPO`; for user
+   sites it is `https://YOUR_USERNAME.github.io`.
+4. (Optional) If you want to test locally with the same path prefix that GitHub
+   Pages uses, run:
 
-Because GitHub Pages hosts project sites in a subdirectory, verify that your links remain relative when using this option.
+   ```bash
+   ELEVENTY_PATH_PREFIX=/YOUR_REPO npm run build
+   ```
+
+The workflow automatically detects whether your repository is a user/org page or
+a project page and sets the `ELEVENTY_PATH_PREFIX` environment variable for the
+build. That keeps internal asset and navigation links working without manual
+tweaks.
 
 ---
 

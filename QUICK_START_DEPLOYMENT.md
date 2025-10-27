@@ -27,6 +27,20 @@
 
 ---
 
+## Alternate: Ship with GitHub Pages
+1. Push this repository to GitHub.
+2. The included `.github/workflows/deploy.yml` workflow runs on `main`, builds
+   the site, and publishes it to GitHub Pages.
+3. After the first run, open **Settings → Pages** to confirm the deployment and
+   copy the published URL.
+4. Update `src/_data/site.json` → `url` to match that domain and commit the
+   change. Future pushes will redeploy automatically.
+
+> Need to mirror the Pages environment locally? Run
+> `ELEVENTY_PATH_PREFIX=/YOUR_REPO npm run build` before inspecting `_site/`.
+
+---
+
 ## 📝 Updating Your Blog Later
 ```powershell
 # After editing posts or pages
