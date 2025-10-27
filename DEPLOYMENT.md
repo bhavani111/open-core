@@ -1,250 +1,115 @@
 # Deployment Guide for OpenCore Dispatch
 
-This guide will help you deploy your blog to the internet for free!
+This guide walks you through launching the blog on modern static hosts.
 
 ## ✅ Prerequisites Completed
 
 - ✅ Git repository initialized
 - ✅ Initial commit created
-- ✅ Deployment configuration files added
-- ✅ Build scripts configured
+- ✅ Build scripts configured (`npm run build`)
+- ✅ Production-ready HTML generated in `_site/`
 
 ## 🚀 Deployment Options
 
-### Option 1: GitHub Pages (Recommended - Zero cost, no extra accounts)
-
-**Why GitHub Pages?**
-- ✅ Completely free
-- ✅ Uses your existing GitHub account
-- ✅ Automatic builds via GitHub Actions
-- ✅ Free SSL certificate (HTTPS)
-- ✅ Custom domain support
-
-**Steps:**
-
-1. **Create a GitHub account** (if you don't have one)
-   - Go to https://github.com/signup
-
-2. **Create a new repository on GitHub**
-   - Go to https://github.com/new
-   - Repository name: `opencore-dispatch` (or any name you like)
-   - Make it Public
-   - Don't initialize with README (we already have one)
-   - Click "Create repository"
-
-3. **Push your code to GitHub**
-
-   Open PowerShell in your project folder and run:
-
-   ```powershell
-   # Add GitHub as remote (replace YOUR_USERNAME with your GitHub username)
-   git remote add origin https://github.com/YOUR_USERNAME/opencore-dispatch.git
-
-   # Rename branch to main (if needed)
-   git branch -M main
-
-   # Push to GitHub
-   git push -u origin main
-   ```
-
-4. **Enable GitHub Pages**
-   - Go to your repository on GitHub
-   - Click "Settings" → "Pages"
-   - Under "Build and deployment", choose "GitHub Actions"
-   - The workflow file at `.github/workflows/deploy.yml` is ready to go
-
-5. **Set the public URL in the site data**
-   - Edit `src/_data/site.json`
-   - Change `url` to `https://YOUR_USERNAME.github.io/opencore-dispatch`
-
-6. **Trigger the first deployment**
-   - Push a commit or head to the **Actions** tab and run "Deploy site"
-   - Approve the workflow if GitHub prompts you
-
-7. **Your site is live!**
-   - URL: `https://YOUR_USERNAME.github.io/opencore-dispatch/`
-   - Set a custom domain in **Settings → Pages** if desired
-
-> The GitHub Actions workflow calculates the correct Eleventy `pathPrefix`
-> automatically, so assets work on both user/organization pages and repository
-> pages.
-
-**Future updates:**
-- Push to GitHub: `git push`
-- The workflow rebuilds and deploys automatically
-
----
-
-### Option 2: Vercel (Fast, modern)
+### Option 1: Vercel (Recommended - Fastest to production)
 
 **Why Vercel?**
-- ✅ Generous free tier
-- ✅ Global CDN and great performance
+- ✅ Global CDN with an extremely generous free tier
 - ✅ Automatic previews for pull requests
-- ✅ Easy custom domains and HTTPS
+- ✅ Git-based workflow that mirrors how you already work
+- ✅ Built-in HTTPS and custom domains
+- ✅ Zero configuration for Eleventy (reinforced by the included `vercel.json`)
 
-**Steps:**
+**Deploy in minutes:**
 
-1. **Push to GitHub** (same as steps 1-3 above)
-
-2. **Deploy to Vercel**
+1. **Push your code to GitHub (or GitLab/Bitbucket)**
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/opencore-dispatch.git
+   git branch -M main
+   git push -u origin main
+   ```
+2. **Create the Vercel project**
    - Go to https://vercel.com/
-   - Click "Sign up" and choose "Continue with GitHub"
-   - Click "Add New" → "Project"
-   - Import your `opencore-dispatch` repository
-   - Vercel auto-detects Eleventy
-   - Build command: `npm run build`
-   - Output directory: `_site`
-   - Click "Deploy"
+   - Sign up or log in, then choose **Add New… → Project**
+   - Import your repository
+   - Keep the detected settings: build command `npm run build`, output `_site`
+   - Click **Deploy**
+3. **Update site metadata**
+   - After the first deploy, edit `src/_data/site.json`
+   - Set the `url` field to your production domain (for example `https://opencore-dispatch.vercel.app`)
+4. **Optional: add a custom domain**
+   - In Vercel, open **Settings → Domains**
+   - Add your domain and follow the DNS instructions
 
-3. **Your site is live!**
-   - Default URL: `https://opencore-dispatch.vercel.app`
-   - Add a custom domain in **Settings → Domains** if you have one
+Future pushes to `main` redeploy automatically, and every pull request receives a preview URL.
 
----
-
-### Option 3: Cloudflare Pages (Great for custom domains)
+### Option 2: Cloudflare Pages (Great for teams already on Cloudflare)
 
 **Why Cloudflare Pages?**
 - ✅ Free tier with generous bandwidth
-- ✅ Built-in CDN and web analytics
-- ✅ Easy custom domains and SSL management
-- ✅ Integrates with Cloudflare DNS if you already use it
+- ✅ Integrated analytics and web security tooling
+- ✅ Works seamlessly with Cloudflare DNS
 
 **Steps:**
 
-1. **Push to GitHub** (same as steps 1-3 above)
+1. Push your repository to GitHub (same as above).
+2. Visit https://pages.cloudflare.com/ and create a new project.
+3. Connect your Git provider and select the repository.
+4. Use `npm run build` for the build command and `_site` for the output directory.
+5. Deploy and optionally attach a custom domain in **Pages → Custom domains**.
 
-2. **Deploy to Cloudflare Pages**
-   - Go to https://pages.cloudflare.com/
-   - Click "Create a project" and connect your GitHub account
-   - Select the `opencore-dispatch` repository
-   - Build command: `npm run build`
-   - Build output directory: `_site`
-   - Save and start the first deploy
+### Option 3: GitHub Pages (Simple static hosting)
 
-3. **Your site is live!**
-   - Default URL: `https://opencore-dispatch.pages.dev`
-   - Assign a custom domain in **Pages → Custom domains**
+If you prefer to stay entirely within GitHub:
+
+1. Push your code to GitHub.
+2. Add a GitHub Actions workflow that builds Eleventy and uploads the `_site` folder to Pages. The [`actions/deploy-pages`](https://github.com/actions/deploy-pages) workflow template is a good starting point.
+3. Set `src/_data/site.json` → `url` to `https://YOUR_USERNAME.github.io/YOUR_REPO`.
+4. Enable **Settings → Pages** in your repository and point it at the workflow output.
+
+Because GitHub Pages hosts project sites in a subdirectory, verify that your links remain relative when using this option.
 
 ---
 
 ## 🌐 Custom Domain (Optional)
 
-If you want your own domain like `opencoredispatch.com`:
+If you want a domain such as `opencoredispatch.com`:
 
-1. **Buy a domain** from:
-   - Namecheap (~$10/year)
-   - Google Domains
-   - Cloudflare (~$9/year)
-
-2. **Configure DNS** in your hosting platform:
-   - **GitHub Pages**: Settings → Pages → Custom domain
-   - **Vercel**: Project Settings → Domains → Add
-   - **Cloudflare Pages**: Project → Custom domains → Set up
-
-3. **Update DNS records** at your domain registrar:
-   - Follow the instructions from your hosting platform
-   - Usually involves adding A records or CNAME records
+1. Purchase a domain from a registrar (Namecheap, Cloudflare, etc.).
+2. In your hosting platform, add the domain:
+   - **Vercel:** Project Settings → Domains → Add
+   - **Cloudflare Pages:** Project → Custom domains → Set up
+   - **GitHub Pages:** Settings → Pages → Custom domain
+3. Follow the DNS instructions supplied by the host (typically CNAME or A records).
 
 ---
 
 ## 📝 Making Updates
 
-After deployment, to update your blog:
-
-1. **Make changes locally** (add new posts, edit content)
-
-2. **Commit changes**:
-   ```powershell
+1. Make changes locally (new posts, design tweaks, etc.).
+2. Commit the changes:
+   ```bash
    git add .
    git commit -m "Add new post about RISC-V"
    ```
-
-3. **Push to GitHub**:
-   ```powershell
+3. Push to your remote:
+   ```bash
    git push
    ```
-
-4. **Automatic deployment**:
-   - Your hosting platform will automatically rebuild and deploy
-   - Wait 1-2 minutes for changes to appear
+4. Your hosting provider rebuilds automatically—give it a minute or two.
 
 ---
 
-## 🎯 Recommended: Start with GitHub Pages
+## 🎯 Recommended: Start with Vercel
 
-For beginners, I recommend **GitHub Pages** because:
-- No additional accounts to manage
-- Excellent free tier
-- Automatic HTTPS
-- Tight GitHub integration
-- Simple custom domain setup
+For most users Vercel offers the smoothest experience: it deploys quickly, scales automatically, and provides preview URLs for collaboration without extra setup.
 
 ---
 
 ## 📊 What Happens During Deployment
 
-1. **Build process**:
-   - Hosting platform runs `npm install`
-   - Then runs `npm run build`
-   - Eleventy generates static HTML files in `_site/`
-
-2. **Deployment**:
-   - Platform uploads `_site/` folder to their CDN
-   - Your site is available worldwide instantly
-
-3. **Updates**:
-   - Every time you push to GitHub
-   - Platform detects changes and rebuilds automatically
-
----
-
-## 🔧 Troubleshooting
-
-### Build fails on hosting platform
-
-Check the build logs for errors. Common issues:
-- Node version mismatch (we use Node 18)
-- Missing dependencies (run `npm install` locally first)
-
-### Site looks different than localhost
-
-- Clear your browser cache
-- Check that all assets are loading (CSS, images)
-- Verify paths are correct (use relative paths)
-
-### Changes not appearing
-
-- Wait 1-2 minutes for build to complete
-- Check build logs in hosting dashboard
-- Clear browser cache
-
----
-
-## 📞 Need Help?
-
-If you encounter issues:
-1. Check the build logs in your hosting platform
-2. Verify your code works locally (`npm run dev`)
-3. Check GitHub repository is up to date
-4. Review hosting platform documentation
-
----
-
-## 🎉 Next Steps After Deployment
-
-1. Share your blog URL on social media
-2. Add your actual contact information in `src/contact.njk`
-3. Update `src/_data/site.json` with your real URLs
-4. Start writing more posts!
-5. Consider adding:
-   - Google Analytics
-   - Comments system (Disqus, utterances)
-   - RSS feed
-   - Search functionality
-
----
-
-**Your blog is ready to go live! Choose a hosting option above and follow the steps.** 🚀
+1. **Install dependencies:** the host runs `npm install`.
+2. **Build:** the host executes `npm run build`, producing static files in `_site/`.
+3. **Publish:** the host uploads `_site/` to its CDN and enables caching/HTTPS.
+4. **Subsequent updates:** every push triggers the same build-and-publish cycle automatically.
 

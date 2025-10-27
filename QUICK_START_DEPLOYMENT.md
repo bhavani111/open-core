@@ -1,72 +1,43 @@
-# 🚀 Quick Start: Deploy in 5 Minutes
+# 🚀 Quick Start: Deploy in 5 Minutes (Vercel Edition)
 
-## Step 1: Create GitHub Account
-- Go to https://github.com/signup
-- Create a free account
+## Step 1: Push Your Code to GitHub
+- Create a free GitHub account if you do not already have one.
+- Create a public repository (e.g. `opencore-dispatch`).
+- From your project folder run:
+  ```powershell
+  git remote add origin https://github.com/YOUR_USERNAME/opencore-dispatch.git
+  git branch -M main
+  git push -u origin main
+  ```
 
-## Step 2: Create Repository
-- Go to https://github.com/new
-- Name: `opencore-dispatch`
-- Make it **Public**
-- Click "Create repository"
+## Step 2: Deploy on Vercel
+1. Visit [vercel.com](https://vercel.com/) and sign in (GitHub login works great).
+2. Click **Add New… → Project** and import the repository you just pushed.
+3. Accept the detected settings: build command `npm run build`, output directory `_site`.
+4. Click **Deploy**. Your site will be live within a minute at a URL like `https://opencore-dispatch.vercel.app`.
 
-## Step 3: Push Your Code
+## Step 3: Tell the Site Its Public URL
+- Update `src/_data/site.json` so the `url` field matches the domain from Vercel.
+- Commit and push the change; Vercel will redeploy automatically.
 
-Open PowerShell in your project folder:
-
-```powershell
-# Replace YOUR_USERNAME with your actual GitHub username
-git remote add origin https://github.com/YOUR_USERNAME/opencore-dispatch.git
-git branch -M main
-git push -u origin main
-```
-
-## Step 4: Deploy to GitHub Pages (Easiest!)
-
-1. Update `src/_data/site.json` so `url` points to
-   `https://YOUR_USERNAME.github.io/opencore-dispatch` (or your custom domain).
-2. Push your code to GitHub (from Step 3).
-3. Open your repository in the browser and go to **Settings → Pages**.
-4. Under **Build and deployment**, choose **GitHub Actions** as the source.
-5. Head to the **Actions** tab, open the "Deploy site" workflow, and click
-   **Run workflow**. Approve the prompt the first time it runs.
-
-**Done! Your site is live!** 🎉
-
-Your URL will be: `https://YOUR_USERNAME.github.io/opencore-dispatch/`
-
-> The workflow detects whether you are publishing to `YOUR_USERNAME.github.io`
-> or a repository page and sets Eleventy's `pathPrefix` automatically, so all
-> links keep working.
-
-## Step 5: Customize Your URL (Optional)
-
-In GitHub Pages:
-- Go to **Settings → Pages**
-- Add a **Custom domain** (e.g. `blog.example.com`)
-- Update your DNS `CNAME` record to point to `YOUR_USERNAME.github.io.`
-- GitHub will automatically provision HTTPS once DNS resolves
+## Step 4: (Optional) Add Your Own Domain
+- In Vercel, open **Settings → Domains**.
+- Add your domain and follow the DNS instructions shown.
+- Once DNS updates, Vercel provisions HTTPS automatically.
 
 ---
 
-## 📝 To Update Your Blog Later
-
+## 📝 Updating Your Blog Later
 ```powershell
-# Make your changes, then:
+# After editing posts or pages
 git add .
-git commit -m "Your update message"
+git commit -m "Publish new article"
 git push
 ```
-
-GitHub Pages will automatically rebuild and deploy! ✨
+Vercel watches your repository and redeploys on every push.
 
 ---
 
-## 🆘 Need Help?
-
-See the full `DEPLOYMENT.md` guide for:
-- Alternative hosting options (Vercel, Cloudflare Pages)
-- Custom domain setup
-- Troubleshooting
-- Advanced configuration
+## 🆘 Need Alternatives or More Detail?
+See `DEPLOYMENT.md` for instructions on Cloudflare Pages, GitHub Pages, and advanced configuration tips.
 
